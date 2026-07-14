@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index</title>
+<style>
+:root{--bg:#050505;--fg:#f4f4f4;--accent:#ff4d00}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif}
+body{overflow:hidden}
+.wrap{min-height:100vh;display:grid;place-items:center;position:relative;padding:20px}
+.panel{width:min(980px,94vw);height:min(680px,88vh);border:1px solid #ffffff24;border-radius:30px;position:relative;overflow:hidden;background:#0b0b0b;box-shadow:0 40px 120px #000}
+.grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent)}
+.core{position:absolute;inset:0;display:grid;place-items:center}
+.big{font-size:clamp(72px,16vw,210px);font-weight:900;letter-spacing:-.08em;line-height:.8;text-align:center;mix-blend-mode:screen;filter:drop-shadow(0 0 30px #ff4d0088)}
+.info{position:absolute;left:32px;top:28px;font-size:12px;letter-spacing:.25em;text-transform:uppercase;opacity:.65}
+.counter{position:absolute;right:32px;top:26px;font-variant-numeric:tabular-nums;font-size:14px;opacity:.75}
+.bar{position:absolute;left:32px;right:32px;bottom:30px;height:2px;background:#ffffff1c;overflow:hidden}
+.bar span{display:block;height:100%;width:20%;background:var(--accent);box-shadow:0 0 22px var(--accent);animation:scan 2.6s ease-in-out infinite}
+@keyframes scan{0%{transform:translateX(-100%)}50%{transform:translateX(420%)}100%{transform:translateX(900%)}}
+.pulse{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--accent);box-shadow:0 0 35px var(--accent);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{transform:scale(1.8);opacity:.35}}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="panel">
+<canvas id="fx"></canvas>
+<div class="grid"></div>
+<div class="info">system online</div>
+<div class="counter" id="clock">00:00:00</div>
+<div class="core"><div class="big" id="word">READY</div><div class="pulse"></div></div>
+<div class="bar"><span></span></div>
+</section>
+</div>
+<script>
+const words=["READY","MOVE","NOW","GO","AGAIN"];
+let i=0;
+setInterval(()=>{word.textContent=words[++i%words.length];document.documentElement.style.setProperty("--accent",`hsl(${Math.random()*360} 100% 55%)`)},1800);
+setInterval(()=>clock.textContent=new Date().toLocaleTimeString("no-NO",{hour12:false}),1000);
+const c=document.getElementById("fx"),x=c.getContext("2d");
+function size(){c.width=c.clientWidth*devicePixelRatio;c.height=c.clientHeight*devicePixelRatio;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+function draw(){x.clearRect(0,0,c.clientWidth,c.clientHeight);for(let n=0;n<22;n++){const y=(Date.now()/18+n*43)%c.clientHeight;x.fillStyle=`rgba(255,255,255,${Math.random()*.08})`;x.fillRect(0,y,c.clientWidth,1)}requestAnimationFrame(draw)}
+addEventListener("resize",size);size();draw();
+</script>
+</body>
+</html>
